@@ -1,0 +1,379 @@
+====================================================================================
+					xsh
+====================================================================================
+Contents
+
+	+ xsh
+
+	+ Internal Commands
+		- Show
+		- Set
+		- Unset
+		- Export
+		- Unexport
+		- Environ
+		- Chdir
+		- Exit
+		- Wait
+		- Clr
+		- Dir
+		- Echo
+		- Help
+		- Pause
+		- History
+		- Repeat
+		- Kill
+
+	+ Externals
+		- Pipes/Forks/IO Redirection
+		- Background (!)
+		- Will Execute anything in PATH variable
+
+	+ Signals
+		- Forwarded
+		- Ignored 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+Name 
+	xsh
+
+Description
+	This Shell is is a toy shell that the only operates correctly when given correct input; the behavior of xsh when given incorrect input is undefined. It is an incomplete shell - it is missing many features included in other shells.
+
+Usage:
+	xsh [-x] [-d <level>] [-f filepath [arg1], [arg2] …]
+
+Options
+	These fields are all optional, any combination can be used together
+
+	-x: The command line after variable substitution will be displayed before the command is evaluated.  
+
+	-d:  <DebugLevel>: Output debug messages. DebugLevel=0 means don’t output any debug messages. 
+             DebugLevel=1-3: 1 outputs the least debug information, 3 outputs the most.
+
+	-f: Input is from a file instead of stdin. i.e., File is a shell script. 
+	    The file must have a empty new line symbol on the end
+            If there are arguments, the strings are assigned to the shell variables $1, $2, etc. 
+            The shell will exit when the end of file reached.	
+	
+--------------------------------------------------------------------------------------------------------------------------------------------
+Internal Commands
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name: show
+
+
+Usage:
+
+	show W1 W2 … 
+	- display the word(s) followed by a newline  
+
+Options:
+
+	Show must be followed with a word. If this word is prepended with a '$' (variable indicator), the value shown will be the assigned value of local variable $W1.
+	Additional words are optional, but must be separated by a space from its previous word.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : set 
+
+Usage:
+
+	set W1 W2   
+	- set a variable with a certain value in the Shell environment.
+
+Options:
+
+	Set must be followed by two words. The first word is the variable name, and the second word is the value of that variable. The two words must be separated by a space.  
+	Attempting to assign a value to '$$', '$!', or '$?' is not allowed, as these are shell-protected variables.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : unset 
+
+Usage:
+
+	unset W1
+	- unset a variable from the Shell environment.
+Options:
+
+	Set must be followed by one word. W1 will be unset from the list of environment variables.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : export
+
+Usage:
+
+	export W1 W2
+	- export the global variable W1 with the value W2 to the environment
+
+Options:
+
+	Export must be followed by two words.
+	W1 will be the name of the environment variable, and W2 will be the value
+	If W2 is prepended with a '$', the value of local variable $W2 will be the value of the environment variable
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : unexport  
+
+Usage:
+
+	unexport W1
+	- unexport a variable from the environment
+
+Options:
+
+	Unexport must be followed by exactly one word. This word indicates the name of the variable which will be unexported from the Shell environment. If the variable does not exist the variable is not unexported. 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : environ
+
+Usage:
+
+	environ 
+	- shows all environment variables
+
+Options
+
+	The environ command takes no arguments
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Name : Chdir 
+
+Usage:
+
+	chdir W
+	- changes the directory to W
+
+
+Options
+
+	chdir takes 1 argument, which will be the new directory
+	".." moves the directory up one level-to the parent
+	"./file" moves the further down one level-to file
+	an absolute path will change the dir to that path
+	
+	User must enter arguments with these exact commands only, or the directory will be corrupted and 
+	  will need to be reset with a chdir to a correct absolute path
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : exit 
+
+Usage:
+
+	exit l 
+	- exit the shell with l as the return value.
+
+Options
+
+	exit command must be followed by an integer value 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : wait 
+
+Usage:
+
+	wait l
+	- waits for the completetion of process 'l'
+
+Options:
+
+	wait command must be followed by a valid pid, or nothing will happen.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : clr 
+
+Usage:
+
+	clr
+	- clears the terminal.
+
+Options
+
+	clr takes no arguments.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : echo 
+
+Usage:
+
+	echo <comment>
+	- displays the comment, followed by a new line. 
+
+Options
+
+	the echo command requires a comment. 
+	If a word is prepended with '$' the assigned value of local variable $word will be displayed.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : dir
+
+Usage:
+
+	dir 
+	- lists the content of the current directory.
+
+Options
+
+	dir takes no arguments
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : pause 
+
+Usage:
+
+	pause
+	- pauses the operation until enter in pressed.
+
+Options
+
+	Pause takes no arguments. The operation of the shell will be stopped until enter is pressed. 
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : history 
+
+Usage:
+
+	history n
+	- shows the nth command in the history list
+	- if n is ommited, it shows the full history list.
+	- history can hold up to 100 previous commands
+
+Options
+
+	if history is given an integer argument, it will show the nth command in the history (up to 100)
+	if history is given no arguments, or n is greater than 100, the full history list will be shown 
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : repeat
+
+Usage:
+
+	repeat n 
+	- Int n is optional. If n is not specified then the last command is repeated. 
+	- If n is specified, it repeats the nth command on the history list.
+	- This command will inject a certain command into the input buffer, then do a single
+	  run loop without input prompt.
+
+Options
+
+	repeat can take up to 1 argument. Repeat will not attempt to repeat a repeat command.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : help
+
+Usage:
+
+	help 
+	- loads this page. (Please make sure this file is under a "reachable" directory.
+
+Options
+
+	No arguments. 
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Name : kill 
+
+Usage:
+
+	kill [n] pid 
+	- sends signal n to process with correspond pid. 
+
+Options
+
+	kill must have either 2 or 3 arguments. Int n is optional.
+	If -n is specified, signal (-n) will be sent to process (pid).
+	If -n isn’t specified, the process(pid) is sent SIGTERM by default.  
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+External Commands
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+The shell will first check the path of the command, if failed it may do several search in PATH environment variable.
+	1. Check if the real path is available;
+	2. Check if the path is available under any PATH environment directory;
+	3. Check if the last single word after the last '/' symbol can be found. If so, it will be replaced
+
+Pipes/IO redirection:
+
+	xsh >> command [ -d ] command [ -d ] command [ -d ] command
+
+	-d signifies the "director" which would be pipes (|) or IO redirections (< or > or >> or <<)
+
+	If there are commands splited by |, they will be redirected and executed sequencely. There should
+	be no limit on the max number of commands. But large number is not recommended
+
+Background Processing:
+
+	Adding a space-delimited '!' at the end of an external command will make the process continue as a
+	background process. The shell will not wait for this process to complete.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Signals
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+Forwarded To Childs:
+		- SIGINT	(Ctrl + C)
+		- SIGQUIT	(Ctrl + \)	
+		- SIGCONT	(Ctrl + Q)
+		- SIGSTP	(Ctrl + Z)
+Ignored:
+		- SIGABRT
+		- SIGALRM 
+		- SIGHUP
+		- SIGTERM
+		- SIGUSR1
+		- SIGUSR2
+
